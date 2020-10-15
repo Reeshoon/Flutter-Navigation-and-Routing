@@ -6,7 +6,7 @@ import 'helper.dart';
 import 'forgotPassword.dart';
 
 void main() {
-  runApp(Homepage());
+  runApp(new Homepage());
 }
 
 class Homepage extends StatelessWidget {

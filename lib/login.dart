@@ -3,6 +3,8 @@ import 'package:navigation_routing/forgotPassword.dart';
 import 'welcome.dart';
 import 'package:flutter/material.dart';
 import 'helper.dart';
+import 'auth_helper.dart';
+import 'Homepage.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -12,6 +14,23 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  static const String id = "login_screen";
+
+
+
+  TextEditingController _emailController;
+  TextEditingController _passwordController;
+
+  @override
+  void initState(){
+    super.initState();
+
+    _emailController = TextEditingController(text: "");
+    _passwordController = TextEditingController(text: "");
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,12 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children:<Widget> [
               Container(
-                height: 280.0,
+                height: 200.0,
                 child: Image.asset("images/splash.png"),
                 alignment: Alignment.center,
               ),
-              SizedBox(height: 40.0,),
               TextField(
+                controller: _emailController,
                 textAlign: TextAlign.center,
                 onChanged: (value)
                 {
@@ -51,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 10.0,),
               TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   textAlign: TextAlign.center,
                   onChanged: (value)
@@ -65,9 +85,38 @@ class _LoginScreenState extends State<LoginScreen> {
               RoundedButton(
                 title: "Log In",
                 colour: Colors.white,
-                onPressed: (){
+              onPressed: () async {
 
+                  if (_emailController.text.isEmpty|| _passwordController.text.isEmpty ) {
+                    print("Please enter your email and password");
+                    return;
+                  }
+                  try {
+                    final user = await AuthHelper.signInWithEmail(
+                    email: _emailController.text,
+                    password: _passwordController.text);
+                    if(user != null){
+                      print("Login Success!");
+                  }
+                  }
+                  catch (e) {
+                    print(e);
+                  }
+            },
+              ),
+              SizedBox(height: 5,),
+              RoundedButton(
+                title: "Log In With Google",
+                colour: Colors.white,
+                onPressed: ()async {
+                  try{
+                    await AuthHelper.signInWithGoogle();
+                  }  catch (e){
+                    print (e);
+                  }
                 },
+
+
               ),
               SizedBox(height: 20,),
           new GestureDetector(
